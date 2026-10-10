@@ -18,14 +18,14 @@ exports.generateConsolidatedReport = async (req, res) => {
       { $sort: { "_id.area": 1 } },
     ]);
 
-    const filePath = path.join("uploads", `consolidated-report-${Date.now()}.pdf`);
+    const filePath = path.resolve("uploads", `consolidated-report-${Date.now()}.pdf`);
     await generateConsolidatedPDF(summary, filePath);
 
-    // Auto-email to municipal office
     await sendEmail(
       process.env.MUNICIPAL_EMAIL,
       "Weekly Civic Complaint Summary Report",
-      "Please find attached the consolidated area-wise and category-wise complaint report."
+      "Please find attached the consolidated area-wise and category-wise complaint report.",
+      [{ filename: "Civic-Complaint-Report.pdf", path: filePath }]
     );
 
     res.json({ message: "Consolidated report generated and emailed", summary, filePath });
