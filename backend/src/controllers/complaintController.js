@@ -22,13 +22,18 @@ function detectCategory(text) {
 exports.createComplaint = async (req, res) => {
   try {
     const { title, description, area } = req.body;
+
+    if (!title || !description || !area) {
+      return res.status(400).json({ message: "Title, description and area are required" });
+    }
+
     const category = detectCategory(description);
-    const photoUrl = req.file ? req.file.path : null;
+    const photoUrl = req.file ? req.file.path.replace(/\\/g, "/") : null;
 
     const complaint = new Complaint({
-      title,
-      description,
-      area,
+      title: title.trim(),
+      description: description.trim(),
+      area: area.trim(),
       category,
       photoUrl,
       createdBy: req.user ? req.user.id : null,
@@ -71,11 +76,23 @@ exports.getComplaintById = async (req, res) => {
 // Upvote complaint
 exports.upvoteComplaint = async (req, res) => {
   try {
-    const complaint = await Complaint.findByIdAndUpdate(
-      req.params.id,
-      { $inc: { upvotes: 1 } },
-      { new: true }
-    );
+    const complaint = await Complaint.findById(req.params.id);
+
+    if (!complaint) {
+      return res.status(404).json({ message: "Complaint not found" });
+    }
+
+    const userId = req.user.id;
+    const alreadyUpvoted = complaint.upvotedBy.some((id) => id.toString() === userId);
+
+    if (alreadyUpvoted) {
+      return res.status(400).json({ message: "You have already upvoted this complaint" });
+    }
+
+    complaint.upvotedBy.push(userId);
+    complaint.upvotes = complaint.upvotedBy.length;
+    await complaint.save();
+
     res.json(complaint);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -89,7 +106,7 @@ exports.updateStatus = async (req, res) => {
     const { status, assignedTo } = req.body;
     const updateData = { status };
     if (assignedTo) updateData.assignedTo = assignedTo;
-    if (req.file) updateData.resolutionPhoto = req.file.path;
+    if (req.file) updateData.resolutionPhoto = req.file.path.replace(/\\/g, "/");
 
     const complaint = await Complaint.findByIdAndUpdate(req.params.id, updateData, {
       new: true,

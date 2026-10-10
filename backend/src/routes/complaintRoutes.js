@@ -13,7 +13,7 @@ const {
   getComplaintCounts,
 } = require("../controllers/complaintController");
 
-// Specific routes FIRST (before /:id, otherwise Express treats these as an id)
+// Specific routes FIRST (before /:id)
 router.get("/my-complaints", protect, getMyComplaints);
 router.get("/stats/counts", getComplaintCounts);
 
@@ -21,7 +21,7 @@ router.get("/stats/counts", getComplaintCounts);
 router.post("/", protect, upload.single("photo"), createComplaint);
 router.get("/", getComplaints);
 router.get("/:id", getComplaintById);
-router.patch("/:id/upvote", upvoteComplaint);
+router.patch("/:id/upvote", protect, upvoteComplaint);
 
 // Admin-only routes
 router.patch("/:id/status", protect, adminOnly, upload.single("resolutionPhoto"), updateStatus);

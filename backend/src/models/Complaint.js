@@ -19,6 +19,7 @@ const complaintSchema = new mongoose.Schema(
     assignedTo: { type: String, default: "Not Assigned" },
     resolutionPhoto: { type: String },
     upvotes: { type: Number, default: 0 },
+    upvotedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
