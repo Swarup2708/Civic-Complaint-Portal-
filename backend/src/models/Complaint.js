@@ -10,6 +10,7 @@ const complaintSchema = new mongoose.Schema(
       default: "Other",
     },
     area: { type: String, required: true },
+    address: { type: String, default: "" },
     photoUrl: { type: String },
     status: {
       type: String,

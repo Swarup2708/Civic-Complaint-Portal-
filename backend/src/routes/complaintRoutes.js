@@ -11,6 +11,8 @@ const {
   deleteComplaint,
   getMyComplaints,
   getComplaintCounts,
+  downloadComplaintReport,
+  forwardComplaint,
 } = require("../controllers/complaintController");
 
 // Specific routes FIRST (before /:id)
@@ -25,6 +27,8 @@ router.patch("/:id/upvote", protect, upvoteComplaint);
 
 // Admin-only routes
 router.patch("/:id/status", protect, adminOnly, upload.single("resolutionPhoto"), updateStatus);
+router.get("/:id/report", protect, adminOnly, downloadComplaintReport);
+router.post("/:id/forward", protect, adminOnly, forwardComplaint);
 router.delete("/:id", protect, adminOnly, deleteComplaint);
 
 module.exports = router;
