@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const API_ROOT = "http://localhost:3000";
+export const API_ROOT = "https://civic-complaint-portal.onrender.com";
 
 const api = axios.create({
   baseURL: `${API_ROOT}/api`,
