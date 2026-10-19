@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
@@ -8,6 +9,7 @@ const complaintRoutes = require("./routes/complaintRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const reportRoutes = require("./routes/reportRoutes");
 const commentRoutes = require("./routes/commentRoutes");
+
 
 dotenv.config();
 connectDB();
@@ -34,8 +36,8 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/comments", commentRoutes);
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+const PORT = process.env.PORT || 3000;
+app.listen(PORT,"0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`http://localhost:${PORT}`);
 });

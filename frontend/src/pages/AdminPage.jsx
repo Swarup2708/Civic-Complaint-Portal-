@@ -20,7 +20,14 @@ const suggested = {
   Other: "General Administration",
 };
 
-const img = (p) => `${API_ROOT}/${p.replace(/\\/g, "/")}`;
+
+const img = (p) => {
+  if (!p) return "";
+  if (/^https?:\/\//i.test(p)) return p;
+
+  return `${API_ROOT}/${p.replace(/\\/g, "/").replace(/^\/+/, "")}`;
+};
+
 
 export default function AdminPage() {
   const [complaints, setComplaints] = useState([]);

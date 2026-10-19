@@ -4,7 +4,14 @@ import api, { API_ROOT } from "../lib/axios";
 import StatusBadge from "../components/StatusBadge";
 import { glow } from "../lib/ui";
 
-const img = (p) => `${API_ROOT}/${p.replace(/\\/g, "/")}`;
+
+const img = (p) => {
+  if (!p) return "";
+  if (/^https?:\/\//i.test(p)) return p;
+
+  return `${API_ROOT}/${p.replace(/\\/g, "/").replace(/^\/+/, "")}`;
+};
+
 
 function Panel({ label, photo, tone, onZoom }) {
   const chip = tone === "after" ? "bg-emerald-600" : "bg-slate-800/80";

@@ -8,7 +8,13 @@ import { glow } from "../lib/ui";
 export default function ComplaintCard({ complaint, onUpvote }) {
   const cat = categories.find((c) => c.value === complaint.category) || categories[4];
   const Icon = cat.icon;
-  const photo = complaint.photoUrl ? `${API_ROOT}/${complaint.photoUrl.replace(/\\/g, "/")}` : null;
+  
+const photo = complaint.photoUrl
+  ? /^https?:\/\//i.test(complaint.photoUrl)
+    ? complaint.photoUrl
+    : `${API_ROOT}/${complaint.photoUrl.replace(/^\/+/, "").replace(/\\/g, "/")}`
+  : null;
+
 
   return (
     <div

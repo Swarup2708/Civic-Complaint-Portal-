@@ -8,7 +8,14 @@ import { categories } from "../lib/categories";
 
 const steps = ["Pending", "In Progress", "Resolved"];
 const ID_PATTERN = /^[a-f\d]{24}$/i;
-const img = (p) => `${API_ROOT}/${p.replace(/\\/g, "/")}`;
+
+const img = (p) => {
+  if (!p) return "";
+  if (/^https?:\/\//i.test(p)) return p;
+
+  return `${API_ROOT}/${p.replace(/\\/g, "/").replace(/^\/+/, "")}`;
+};
+
 
 export default function TrackPage() {
   const [params] = useSearchParams();

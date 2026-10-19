@@ -35,7 +35,8 @@ exports.createComplaint = async (req, res) => {
     }
 
     const category = detectCategory(`${title} ${description}`);
-    const photoUrl = req.file ? req.file.path.replace(/\\/g, "/") : null;
+    const photoUrl = req.file ? req.file.path : null;
+    console.log("PHOTO URL:", photoUrl);
 
     const complaint = new Complaint({
       title: title.trim(),
@@ -46,7 +47,7 @@ exports.createComplaint = async (req, res) => {
       photoUrl,
       createdBy: req.user ? req.user.id : null,
     });
-
+    console.log("Uploaded photo URL:", photoUrl);
     await complaint.save();
 
     // Municipal office ko auto-email (background mein)
@@ -135,7 +136,7 @@ exports.updateStatus = async (req, res) => {
 
     const updateData = { status };
     if (assignedTo) updateData.assignedTo = assignedTo;
-    if (req.file) updateData.resolutionPhoto = req.file.path.replace(/\\/g, "/");
+    if (req.file) updateData.resolutionPhoto = req.file.path;
 
     const complaint = await Complaint.findByIdAndUpdate(req.params.id, updateData, {
       new: true,
